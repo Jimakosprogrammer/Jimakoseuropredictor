@@ -1,0 +1,509 @@
+```<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Score Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #00695c;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #004d40 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header ul {
+            padding: 0;
+            list-style: none;
+        }
+        header li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+        .main {
+            padding: 20px;
+            background: #fff;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+        .main h2 {
+            color: #333;
+        }
+        .main form {
+            margin-top: 20px;
+        }
+        .match {
+            background: #b2dfdb;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .match label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .match input[type="text"], .main form input[type="button"] {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            border: 1px solid #004d40;
+            border-radius: 5px;
+        }
+        .main form input[type="button"] {
+            background: #004d40;
+            color: #fff;
+            border: 0;
+            cursor: pointer;
+        }
+        .main form input[type="button"]:hover {
+            background: #00796b;
+        }
+        .main form input[type="button"] {
+            background: #004d40;
+            color: #fff;
+            border: 0;
+            cursor: pointer;
+        }
+        .main form input[type="button"]:hover {
+            background: #00796b;
+        }
+        footer {
+            background: #004d40;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .prizes-menu, .payment-menu, .paypal-menu {
+            display: none;
+            background: #ffffff;
+            padding: 20px;
+            border: 1px solid #004d40;
+            border-radius: 8px;
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        .prizes-menu, .payment-menu, .paypal-menu, .paysafe-menu, .mastercard-menu {
+            display: none;
+            background: #ffffff;
+            padding: 20px;
+            border: 1px solid #004d40;
+            border-radius: 8px;
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        .menu-close {
+            float: right;
+            cursor: pointer;
+            color: #004d40;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Football Score Predictor</h1>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Predictions</a></li>
+                    <li><a href="#" id="prizes-button">Prizes</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main">
+            <h2>Predict the Scores and Win Prizes!</h2>
+            <p>Enter your predictions for the upcoming Euro 2024 matches below. If you predict the score correctly, you stand a chance to win exciting prizes! To predict, you need to pay an amount between 1-50 euros.</p>
+
+            <form id="prediction-form">
+                <div class="match">
+                    <label for="match1">Match 1: Slovenia vs Serbia</label>
+                    <input type="text" id="match1" name="match1" placeholder="Enter your prediction (e.g., 2-1)">
+                </div>
+
+                <div class="match">
+                    <label for="match2">Match 2: Denmark vs England</label>
+                    <input type="text" id="match2" name="match2" placeholder="Enter your prediction (e.g., 1-1)">
+                </div>
+
+                <div class="match">
+                    <label for="match3">Match 3: Spain vs Italy</label>
+                    <input type="text" id="match3" name="match3" placeholder="Enter your prediction (e.g., 0-3)">
+                </div>
+                <input type="button" value="Pay" id="pay-button">
+                <input type="button" value="Predict" id="predict-button" style="display: none;">
+            </form>
+        </div>
+    </div>
+    <div class="prizes-menu">
+        <span class="menu-close" id="close-prizes">X</span>
+        <h2>Prizes</h2>
+        <p>If you predict the score correctly, you will double your money!</p>
+    </div>
+
+    <div class="payment-menu">
+        <span class="menu-close" id="close-payment">X</span>
+        <h2>Choose Payment Method</h2>
+        <button id="paypal-button">PayPal</button>
+        <button id="paysafe-button">PaySafe</button>
+        <button id="mastercard-button">Mastercard</button>
+    </div>
+
+    <div class="paypal-menu">
+        <span class="menu-close" id="close-paypal">X</span>
+        <h2>PayPal Payment</h2>
+        <label for="paypal-email">Email:</label>
+        <input type="email" id="paypal-email" placeholder="Enter email">
+        <label for="paypal-password">Password:</label>
+        <input type="password" id="paypal-password" placeholder="Enter password">
+        <label for="paypal-amount">Enter Amount Again:</label>
+        <input type="text" id="paypal-amount" placeholder="Enter amount">
+        <button id="confirm-paypal-payment">CONFIRM</button>
+    </div>
+
+    <div class="paysafe-menu">
+        <span class="menu-close" id="close-paysafe">X</span>
+        <h2>PaySafe Payment</h2>
+        <label for="paysafe-email">Email:</label>
+        <input type="email" id="paysafe-email" placeholder="Enter email">
+        <label for="paysafe-password">Password:</label>
+        <input type="password" id="paysafe-password" placeholder="Enter password">
+        <label for="paysafe-amount">Enter Amount Again:</label>
+        <input type="text" id="paysafe-amount" placeholder="Enter amount">
+        <button id="confirm-paysafe-payment">CONFIRM</button>
+    </div>
+
+    <div class="mastercard-menu">
+        <span class="menu-close" id="close-mastercard">X</span>
+        <h2>Mastercard Payment</h2>
+        <label for="mastercard-email">Email:</label>
+        <input type="email" id="mastercard-email" placeholder="Enter email">
+        <label for="mastercard-password">Password:</label>
+        <input type="password" id="mastercard-password" placeholder="Enter password">
+        <label for="mastercard-number">Credit Card Number:</label>
+        <input type="text" id="mastercard-number" placeholder="Enter credit card number">
+        <label for="mastercard-cvc">CVC:</label>
+        <input type="text" id="mastercard-cvc" placeholder="Enter CVC">
+        <label for="mastercard-amount">Enter Amount Again:</label>
+        <input type="text" id="mastercard-amount" placeholder="Enter amount">
+        <button id="confirm-mastercard-payment">CONFIRM</button>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <footer>
+        <p>Euro 2024 Predictions &copy; 2024</p>
+    </footer>
+
+    <script>
+        const matchResults = {
+            match1: '2-0',
+            match2: '1-1',
+            match3: '1-1'
+        };
+
+        document.getElementById('prizes-button').addEventListener('click', function() {
+            document.querySelector('.prizes-menu').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        });
+
+        document.getElementById('close-prizes').addEventListener('click', function() {
+            document.querySelector('.prizes-menu').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        });
+
+        document.getElementById('pay-button').addEventListener('click', function() {
+            let amount = prompt("Enter the amount you want to pay (1-50 euros):");
+            if (amount && amount >= 1 && amount <= 50) {
+                document.querySelector('.payment-menu').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+                localStorage.setItem('paymentAmount', amount); // Store the amount in localStorage
+            } else {
+                alert("Invalid amount. Please enter a value between 1 and 50 euros.");
+            }
+        });
+
+        document.getElementById('paypal-button').addEventListener('click', function() {
+            document.querySelector('.payment-menu').style.display = 'none';
+            document.querySelector('.paypal-menu').style.display = 'block';
+        });
+
+        document.getElementById('paysafe-button').addEventListener('click', function() {
+            document.querySelector('.payment-menu').style.display = 'none';
+            document.querySelector('.paysafe-menu').style.display = 'block';
+        });
+
+        document.getElementById('mastercard-button').addEventListener('click', function() {
+            document.querySelector('.payment-menu').style.display = 'none';
+            document.querySelector('.mastercard-menu').style.display = 'block';
+        });
+
+        document.getElementById('close-payment').addEventListener('click', function() {
+            document.querySelector('.payment-menu').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        });
+
+        document.getElementById('close-paypal').addEventListener('click', function() {
+            document.querySelector('.paypal-menu').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        });
+
+        document.getElementById('close-paysafe').addEventListener('click', function() {
+            document.querySelector('.paysafe-menu').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        });
+
+        document.getElementById('close-mastercard').addEventListener('click', function() {
+            document.querySelector('.mastercard-menu').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        });
+
+        function handlePaymentSuccess() {
+            alert("Payment Successful");
+            document.getElementById('pay-button').style.display = 'none';
+            document.getElementById('predict-button').style.display = 'block';
+        }
+
+        document.getElementById('confirm-paypal-payment').addEventListener('click', function() {
+            let email = document.getElementById('paypal-email').value;
+            let password = document.getElementById('paypal-password').value;
+            let amount = document.getElementById('paypal-amount').value;
+
+            if (email && password && amount == localStorage.getItem('paymentAmount')) {
+                alert("Payment Successful");
+                document.querySelector('.paypal-menu').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('predict-button').style.display = 'block';
+            } else {
+                alert("Invalid payment details or amount mismatch.");
+            }
+        });
+
+        document.getElementById('confirm-paysafe-payment').addEventListener('click', function() {
+            let email = document.getElementById('paysafe-email').value;
+            let password = document.getElementById('paysafe-password').value;
+            let amount = document.getElementById('paysafe-amount').value;
+
+            if (email && password && amount == localStorage.getItem('paymentAmount')) {
+                alert("Payment Successful");
+                document.querySelector('.paysafe-menu').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('predict-button').style.display = 'block';
+            } else {
+                alert("Invalid payment details or amount mismatch.");
+            }
+        });
+
+        document.getElementById('confirm-mastercard-payment').addEventListener('click', function() {
+            let email = document.getElementById('mastercard-email').value;
+            let password = document.getElementById('mastercard-password').value;
+            let number = document.getElementById('mastercard-number').value;
+            let cvc = document.getElementById('mastercard-cvc').value;
+            let amount = document.getElementById('mastercard-amount').value;
+
+            if (email && password && number && cvc && amount == localStorage.getItem('paymentAmount')) {
+                alert("Payment Successful");
+                document.querySelector('.mastercard-menu').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('predict-button').style.display = 'block';
+            } else {
+                alert("Invalid payment details or amount mismatch.");
+            }
+        });
+
+   
+
+
+        document.getElementById('predict-button').addEventListener('click', function() {
+            var predictions = {
+                match1: document.getElementById('match1').value,
+                match2: document.getElementById('match2').value,
+                match3: document.getElementById('match3').value,
+                timestamp: new Date().getTime()
+            };
+            localStorage.setItem('predictions', JSON.stringify(predictions));
+            alert('Predictions Completed');
+            document.getElementById('prediction-form').style.display = 'none';
+            var waitingMessage = document.createElement('p');
+            waitingMessage.textContent = 'Waiting for the results';
+            document.querySelector('.main').appendChild(waitingMessage);
+        });
+
+        window.onload = function() {
+            var paymentConfirmed = localStorage.getItem('paymentConfirmed');
+            if (paymentConfirmed) {
+                document.getElementById('pay-button').style.display = 'none';
+                document.getElementById('predict-button').style.display = 'block';
+            }
+
+            var predictions = JSON.parse(localStorage.getItem('predictions'));
+            if (predictions) {
+                var currentTime = new Date().getTime();
+                var fourHours = 0 * 60 * 60 * 1000;
+                if (currentTime - predictions.timestamp < fourHours) {
+                    document.getElementById('prediction-form').style.display = 'none';
+                    var waitingMessage = document.createElement('p');
+                    waitingMessage.textContent = 'Waiting for the results';
+                    document.querySelector('.main').appendChild(waitingMessage);
+                } else {
+                    showResults(predictions);
+                }
+            }
+        }
+
+        function showResults(predictions) {
+            var correctPredictions = 0;
+            for (var match in matchResults) {
+                if (matchResults[match] === predictions[match]) {
+                    correctPredictions++;
+                }
+            }
+            var amount = parseInt(localStorage.getItem('amount'), 10);
+            var winnings = correctPredictions > 0 ? amount * 2 : 0;
+
+            var resultMessage = document.createElement('p');
+            resultMessage.textContent = 'Here are your results:';
+            document.querySelector('.main').appendChild(resultMessage);
+
+            for (var match in predictions) {
+                var result = document.createElement('p');
+                result.textContent = match + ': ' + predictions[match] + ' (Actual: ' + matchResults[match] + ')';
+                document.querySelector('.main').appendChild(result);
+            }
+
+            if (winnings > 0) {
+                var winningsMessage = document.createElement('p');
+                winningsMessage.textContent = 'You won ' + winnings + ' euros!';
+                document.querySelector('.main').appendChild(winningsMessage);
+
+                var takeMoneyButton = document.createElement('button');
+                takeMoneyButton.textContent = 'Take the money';
+                takeMoneyButton.addEventListener('click', function() {
+                    alert('You have taken your winnings of ' + winnings + ' euros.');
+                    resetPredictionForm();
+                });
+                document.querySelector('.main').appendChild(takeMoneyButton);
+            } else {
+                var noWinMessage = document.createElement('p');
+                noWinMessage.textContent = 'Sorry, you did not win anything.';
+                document.querySelector('.main').appendChild(noWinMessage);
+
+                var newPredictionButton = document.createElement('button');
+                newPredictionButton.textContent = 'Make new predictions';
+                newPredictionButton.addEventListener('click', resetPredictionForm);
+                document.querySelector('.main').appendChild(newPredictionButton);
+            }
+        }
+
+        function resetPredictionForm() {
+            localStorage.removeItem('predictions');
+            localStorage.removeItem('paymentConfirmed');
+            localStorage.removeItem('amount');
+            document.querySelector('.main').innerHTML = `
+                <h2>Predict the Scores and Win Prizes!</h2>
+                <p>Enter your predictions for the upcoming Euro 2024 matches below. If you predict the score correctly, you stand a chance to win exciting prizes! To predict, you need to pay an amount between 1-50 euros.</p>
+                <form id="prediction-form">
+                    <div class="match">
+                        <label for="match1">Match 1: Germany vs Hungary</label>
+                        <input type="text" id="match1" name="match1" placeholder="Enter your prediction (e.g., 2-1)">
+                    </div>
+                    <div class="match">
+                        <label for="match2">Match 2: France vs Portugal</label>
+                        <input type="text" id="match2" name="match2" placeholder="Enter your prediction (e.g., 1-1)">
+                    </div>
+                    <div class="match">
+                        <label for="match3">Match 3: Italy vs Spain</label>
+                        <input type="text" id="match3" name="match3" placeholder="Enter your prediction (e.g., 0-3)">
+                    </div>
+                    <input type="button" value="Pay" id="pay-button">
+                    <input type="button" value="Predict" id="predict-button" style="display: none;">
+                </form>
+            `;
+            document.getElementById('pay-button').addEventListener('click', function() {
+                document.querySelector('.payment-menu').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            });
+
+            document.getElementById('close-payment').addEventListener('click', function() {
+                document.querySelector('.payment-menu').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            });
+
+            document.getElementById('paypal-button').addEventListener('click', function() {
+                document.querySelector('.payment-menu').style.display = 'none';
+                document.querySelector('.paypal-menu').style.display = 'block';
+            });
+
+            document.getElementById('close-paypal').addEventListener('click', function() {
+                document.querySelector('.paypal-menu').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            });
+
+            document.getElementById('confirm-payment').addEventListener('click', function() {
+                var amount = document.getElementById('paypal-amount').value;
+                localStorage.setItem('paymentConfirmed', true);
+                localStorage.setItem('amount', amount);
+                alert('Payment Confirmed! You can now start predicting.');
+                document.querySelector('.paypal-menu').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('pay-button').style.display = 'none';
+                document.getElementById('predict-button').style.display = 'block';
+            });
+
+            document.getElementById('predict-button').addEventListener('click', function() {
+                var predictions = {
+                    match1: document.getElementById('match1').value,
+                    match2: document.getElementById('match2').value,
+                    match3: document.getElementById('match3').value,
+                    timestamp: new Date().getTime()
+                };
+                localStorage.setItem('predictions', JSON.stringify(predictions));
+                alert('Predictions Completed');
+                document.getElementById('prediction-form').style.display = 'none';
+                var waitingMessage = document.createElement('p');
+                waitingMessage.textContent = 'Waiting for the results';
+                document.querySelector('.main').appendChild(waitingMessage);
+            });
+        }
+    </script>
+</body>
+</html>
+
